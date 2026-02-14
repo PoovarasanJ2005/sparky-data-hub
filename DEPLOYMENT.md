@@ -7,7 +7,7 @@ Follow these steps to deploy your full-stack application.
 1.  **Git**: Ensure Git is installed and initialized.
 2.  **GitHub Account**: Create a new repository.
 3.  **Render Account**: For backend deployment.
-4.  **Netlify Account**: For frontend deployment.
+4.  **Vercel Account**: For frontend deployment.
 5.  **MongoDB Atlas Account**: You already have this!
 
 ## Step 1: Push to GitHub
@@ -41,32 +41,38 @@ Follow these steps to deploy your full-stack application.
 
 ## Step 3: Configure Frontend for Production
 
-1.  Open `netlify.toml` in your project root.
-2.  Update the URL in the `redirects` section:
-    ```toml
-    [[redirects]]
-      from = "/api/*"
-      to = "https://YOUR_RENDER_SERVICE_URL/api/:splat"  <-- Paste your Render URL here!
-      status = 200
-      force = true
+1.  Open `vercel.json` in your project root.
+2.  Update the `destination` field in the API rewrite section if your backend URL changes:
+    ```json
+    {
+      "rewrites": [
+        {
+          "source": "/api/(.*)",
+          "destination": "https://sparky-data-hub.onrender.com/api/$1"
+        },
+        ...
+      ]
+    }
     ```
 3.  Commit and push this change:
     ```bash
-    git add netlify.toml
+    git add vercel.json
     git commit -m "Update API URL for production"
     git push
     ```
 
-## Step 4: Deploy Frontend to Netlify
+## Step 4: Deploy Frontend to Vercel
 
-1.  Log in to [Netlify](https://www.netlify.com/).
-2.  Click "Add new site" -> "Import from Git".
-3.  Connect your GitHub repository.
-4.  Configure build settings:
-    -   **Build command**: `npm run build`
-    -   **Publish directory**: `dist`
-5.  Click **Deploy site**.
+1.  Log in to [Vercel](https://vercel.com/).
+2.  Click **Add New...** -> **Project**.
+3.  Connect your GitHub account and select your `sparky-data-hub` repository.
+4.  **Wait! Configure Project**:
+    -   **Framework Preset**: Vite
+    -   **Root Directory**: Leave empty or set to `/`
+    -   **Build Command**: `npm run build`
+    -   **Output Directory**: `dist`
+5.  Click **Deploy**.
 
 ## Verification
 
-Visit your Netlify URL. The application should load, and data operations (uploading datasets) should work by communicating with your Render backend and MongoDB Atlas key.
+Visit your Vercel URL. The application should load, and data operations (uploading datasets) should work by communicating with your Render backend and MongoDB Atlas key.
